@@ -1,0 +1,32 @@
+-----Sound Effect:
+
+Money
+{
+Name: Page Turning Sfx.wav 
+Author: Nicole Marie T
+Link: https://opengameart.org/content/page-turning-sfx-sound-effect
+}
+
+Steps 
+{
+Name: steps in wood floor.wav
+Author: mikeask
+Link: https://opengameart.org/content/steps-in-wood-floor
+}
+
+-----Music:
+
+Menu 
+{
+Name: SpongeBob Production Music What Shall We Do With the Drunken Sailor?
+Author: SpongeBob Production Music
+Link: https://opengameart.org/content/music-loop-variations
+}
+
+GamePlay
+{
+Name: MSTR_-_MSTR_-_Choro_bavario_Loop.mp3 
+Author: MSTR
+Link: https://opengameart.org/content/cheerful-1-choro-bavario-happy-loop
+}
+
