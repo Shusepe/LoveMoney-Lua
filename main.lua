@@ -12,6 +12,8 @@ function love.load()
 	
 	-- Init Dolar
 	dolars = {}
+	
+	score = 0
 end
 
 function love.update(dt)
@@ -29,6 +31,7 @@ function love.update(dt)
 		local dolar = dolars[i]
 		if playerDolarCollision(player.x, player.y, player.w, player.h, dolar.x, dolar.y, dolar.w, dolar.h) then
 			table.remove(dolars, i)
+			score = score + 1
 		end
 	end
 	
@@ -50,4 +53,6 @@ function love.draw()
 		local dolar = dolars[i]
 	love.graphics.rectangle("fill", dolar.x, dolar.y, dolar.w, dolar.h)
 	end
+	
+	love.graphics.print("Puntaje: " .. score, 10, 10)
 end
