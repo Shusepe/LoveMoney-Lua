@@ -1,6 +1,9 @@
 require "collision"
 
 function love.load()
+	
+	love.window.setTitle("LoveMoney")
+	love.window.setMode(1024, 650)
 
 	-- Take the time for a random number
 	math.randomseed(os.time())
@@ -15,11 +18,14 @@ function love.load()
 	
 	-- Init Struct Dolar
 	dolars = {}
-	-- timerCount
+	
 	-- timerCheck
 	
 	-- Init Score variable
 	score = 0
+	
+	-- timerCount
+	timeToPlay = 10
 	
 	-- Charge Sounds
 	sounds = {}
@@ -42,24 +48,24 @@ function love.load()
 end
 
 function love.update(dt)
+
 	-- Play Music
 	sounds.gamePlay:play()
-
+	
 	-- Check Input User
-	if love.keyboard.isDown("right") then
-		player.x = player.x + 4
-		-- plus for time
+	if love.keyboard.isDown("right") and (player.x + player.w) <= love.graphics.getWidth() then
+		player.x = player.x + 4 -- plus for time
 		player.direction = "right"
 		sounds.steps:play()
-	elseif love.keyboard.isDown("left") then
+	elseif love.keyboard.isDown("left") and player.x >= 0 then
 		player.x = player.x - 4
 		player.direction = "left"
 		sounds.steps:play()
-	elseif love.keyboard.isDown("down") then
+	elseif love.keyboard.isDown("down") and (player.y + player.h) <= love.graphics.getHeight() then
 		player.y = player.y + 4
 		player.direction = "down"
 		sounds.steps:play()
-	elseif love.keyboard.isDown("up") then
+	elseif love.keyboard.isDown("up") and player.y >= 0 then
 		player.y = player.y - 4
 		player.direction = "up"
 		sounds.steps:play()
@@ -80,9 +86,14 @@ function love.update(dt)
 		local dolar = {}
 		dolar.w = 96
 		dolar.h = 36
-		dolar.x = math.random(0, 800 - dolar.w)
+		dolar.x = math.random(0, 950 - dolar.w)
 		dolar.y = math.random(0, 600 - dolar.h)
 		table.insert(dolars, dolar)
+	end
+	
+	-- Discount Time
+	if math.ceil(timeToPlay)~= 0 then
+        timeToPlay=timeToPlay-dt
 	end
 end
 
@@ -121,4 +132,11 @@ function love.draw()
 	-- Draw Text Score
 	love.graphics.setFont(fonts.large)
 	love.graphics.print("Puntaje: " .. score, 10, 10)
+	
+	-- Draw Timer
+	if timeToPlay>0 then
+		love.graphics.print(math.ceil(timeToPlay), 970, 10)
+	else
+		love.graphics.print(0, 970, 10)
+	end
 end
