@@ -11,11 +11,7 @@ function love.load()
 	player.h = 56
 	
 	-- Init Dolar
-	dolar = {}
-	dolar.x = 150
-	dolar.y = 300
-	dolar.w = 64
-	dolar.h = 56
+	dolars = {}
 end
 
 function love.update(dt)
@@ -29,9 +25,20 @@ function love.update(dt)
 		player.y = player.y - 4
 	end
 	
-	if playerDolarCollision(player.x, player.y, player.w, player.h, dolar.x, dolar.y, dolar.w, dolar.h) then
+	for i=#dolars, 1, -1 do
+		local dolar = dolars[i]
+		if playerDolarCollision(player.x, player.y, player.w, player.h, dolar.x, dolar.y, dolar.w, dolar.h) then
+			table.remove(dolars, i)
+		end
+	end
+	
+	if math.random() < 0.01 then
+		local dolar = {}
+		dolar.w = 96
+		dolar.h = 36
 		dolar.x = math.random(0, 800 - dolar.w)
 		dolar.y = math.random(0, 600 - dolar.h)
+		table.insert(dolars, dolar)
 	end
 end
 
@@ -39,6 +46,8 @@ function love.draw()
 	
 	-- Draw Player
 	love.graphics.rectangle("fill", player.x, player.y, player.w, player.h)
-	
+	for i = 1, #dolars, 1 do
+		local dolar = dolars[i]
 	love.graphics.rectangle("fill", dolar.x, dolar.y, dolar.w, dolar.h)
+	end
 end
