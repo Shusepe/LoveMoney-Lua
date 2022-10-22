@@ -1,6 +1,8 @@
 require "collision"
 
 function love.load()
+
+	-- Take the time for a random number
 	math.randomseed(os.time())
 
 	-- Init Player
@@ -9,32 +11,71 @@ function love.load()
 	player.y = 300
 	player.w = 64
 	player.h = 56
+	player.direction = "down"
 	
-	-- Init Dolar
+	-- Init Struct Dolar
 	dolars = {}
+	-- timerCount
+	-- timerCheck
 	
+	-- Init Score variable
 	score = 0
+	
+	-- Charge Sounds
+	sounds = {}
+	sounds.dolar = love.audio.newSource("LoveMoneyAsset/sfx/MoneySfx.wav", "static")
+	sounds.steps = love.audio.newSource("LoveMoneyAsset/sfx/StepsSfx.wav", "static")
+	sounds.gamePlay = love.audio.newSource("LoveMoneyAsset/music/GamePlay.mp3", "static")
+	
+	-- Charge Fonts
+	fonts = {}
+	fonts.large = love.graphics.newFont("LoveMoneyAsset/fonts/Spongeboy Me Bob.ttf", 36)
+	
+	-- Charge Images
+	images = {}
+	images.background = love.graphics.newImage("LoveMoneyAsset/res/Floor.png")
+	images.dolar = love.graphics.newImage("LoveMoneyAsset/res/Money.png")
+	images.crabPlayerUp = love.graphics.newImage("LoveMoneyAsset/res/CrabPlayerUp.png")
+	images.crabPlayerDown = love.graphics.newImage("LoveMoneyAsset/res/CrabPlayerDown.png")
+	images.crabPlayerRight = love.graphics.newImage("LoveMoneyAsset/res/CrabPlayerRight.png")
+	images.crabPlayerLeft = love.graphics.newImage("LoveMoneyAsset/res/CrabPlayerLeft.png")
 end
 
 function love.update(dt)
+	-- Play Music
+	sounds.gamePlay:play()
+
+	-- Check Input User
 	if love.keyboard.isDown("right") then
 		player.x = player.x + 4
+		-- plus for time
+		player.direction = "right"
+		sounds.steps:play()
 	elseif love.keyboard.isDown("left") then
 		player.x = player.x - 4
+		player.direction = "left"
+		sounds.steps:play()
 	elseif love.keyboard.isDown("down") then
 		player.y = player.y + 4
+		player.direction = "down"
+		sounds.steps:play()
 	elseif love.keyboard.isDown("up") then
 		player.y = player.y - 4
+		player.direction = "up"
+		sounds.steps:play()
 	end
 	
+	-- Check Player Collision Dolar
 	for i=#dolars, 1, -1 do
 		local dolar = dolars[i]
 		if playerDolarCollision(player.x, player.y, player.w, player.h, dolar.x, dolar.y, dolar.w, dolar.h) then
 			table.remove(dolars, i)
 			score = score + 1
+			sounds.dolar:play()
 		end
 	end
 	
+	-- Show Random Dollars
 	if math.random() < 0.01 then
 		local dolar = {}
 		dolar.w = 96
@@ -46,13 +87,38 @@ function love.update(dt)
 end
 
 function love.draw()
-	
-	-- Draw Player
-	love.graphics.rectangle("fill", player.x, player.y, player.w, player.h)
-	for i = 1, #dolars, 1 do
-		local dolar = dolars[i]
-	love.graphics.rectangle("fill", dolar.x, dolar.y, dolar.w, dolar.h)
+
+	-- Draw Background
+	for x=0, love.graphics.getWidth(), images.background:getWidth() do
+		for y=0, love.graphics.getHeight(), images.background:getHeight() do
+			love.graphics.draw(images.background, x, y)
+		end
 	end
 	
+	-- Init Image Player
+	local image = images.crabPlayerUp
+	
+	-- Check Direction Image Player 
+	if player.direction == "right" then
+		image = images.crabPlayerRight
+	elseif player.direction == "up" then
+		image = images.crabPlayerUp
+	elseif player.direction == "left" then
+		image = images.crabPlayerLeft
+	elseif player.direction == "down" then
+		image = images.crabPlayerDown
+	end
+	
+	-- Draw Player
+	love.graphics.draw(image, player.x, player.y)
+	
+	-- Draw Dollars
+	for i = 1, #dolars, 1 do
+		local dolar = dolars[i]
+		love.graphics.draw(images.dolar, dolar.x, dolar.y)
+	end
+	
+	-- Draw Text Score
+	love.graphics.setFont(fonts.large)
 	love.graphics.print("Puntaje: " .. score, 10, 10)
 end
