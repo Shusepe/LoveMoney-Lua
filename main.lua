@@ -19,7 +19,8 @@ function love.load()
 	-- Init Struct Dolar
 	dolars = {}
 	
-	-- timerCheck
+	-- Init PowerUp
+	timePowers = {}
 	
 	-- Init Score variable
 	score = 0
@@ -41,6 +42,7 @@ function love.load()
 	images = {}
 	images.background = love.graphics.newImage("LoveMoneyAsset/res/Floor.png")
 	images.dolar = love.graphics.newImage("LoveMoneyAsset/res/Money.png")
+	images.timePower = love.graphics.newImage("LoveMoneyAsset/res/PlusTime.png")
 	images.crabPlayerUp = love.graphics.newImage("LoveMoneyAsset/res/CrabPlayerUp.png")
 	images.crabPlayerDown = love.graphics.newImage("LoveMoneyAsset/res/CrabPlayerDown.png")
 	images.crabPlayerRight = love.graphics.newImage("LoveMoneyAsset/res/CrabPlayerRight.png")
@@ -49,52 +51,80 @@ end
 
 function love.update(dt)
 
-	-- Play Music
-	sounds.gamePlay:play()
-	
-	-- Check Input User
-	if love.keyboard.isDown("right") and (player.x + player.w) <= love.graphics.getWidth() then
-		player.x = player.x + 4 -- plus for time
-		player.direction = "right"
-		sounds.steps:play()
-	elseif love.keyboard.isDown("left") and player.x >= 0 then
-		player.x = player.x - 4
-		player.direction = "left"
-		sounds.steps:play()
-	elseif love.keyboard.isDown("down") and (player.y + player.h) <= love.graphics.getHeight() then
-		player.y = player.y + 4
-		player.direction = "down"
-		sounds.steps:play()
-	elseif love.keyboard.isDown("up") and player.y >= 0 then
-		player.y = player.y - 4
-		player.direction = "up"
-		sounds.steps:play()
-	end
-	
-	-- Check Player Collision Dolar
-	for i=#dolars, 1, -1 do
-		local dolar = dolars[i]
-		if playerDolarCollision(player.x, player.y, player.w, player.h, dolar.x, dolar.y, dolar.w, dolar.h) then
-			table.remove(dolars, i)
-			score = score + 1
-			sounds.dolar:play()
-		end
-	end
-	
-	-- Show Random Dollars
-	if math.random() < 0.01 then
-		local dolar = {}
-		dolar.w = 96
-		dolar.h = 36
-		dolar.x = math.random(0, 950 - dolar.w)
-		dolar.y = math.random(0, 600 - dolar.h)
-		table.insert(dolars, dolar)
-	end
-	
-	-- Discount Time
 	if math.ceil(timeToPlay)~= 0 then
-        timeToPlay=timeToPlay-dt
+		-- Play Music
+		sounds.gamePlay:play()
+		
+		-- Check Input User
+		if love.keyboard.isDown("right") and (player.x + player.w) <= love.graphics.getWidth() then
+			player.x = player.x + 4 -- plus for time
+			player.direction = "right"
+			sounds.steps:play()
+		elseif love.keyboard.isDown("left") and player.x >= 0 then
+			player.x = player.x - 4
+			player.direction = "left"
+			sounds.steps:play()
+		elseif love.keyboard.isDown("down") and (player.y + player.h) <= love.graphics.getHeight() then
+			player.y = player.y + 4
+			player.direction = "down"
+			sounds.steps:play()
+		elseif love.keyboard.isDown("up") and player.y >= 0 then
+			player.y = player.y - 4
+			player.direction = "up"
+			sounds.steps:play()
+		end
+		
+		-- Check Player Collision Dolar
+		for i=#dolars, 1, -1 do
+			local dolar = dolars[i]
+			if playerCollision(player.x, player.y, player.w, player.h, dolar.x, dolar.y, dolar.w, dolar.h) then
+				table.remove(dolars, i)
+				score = score + 1
+				sounds.dolar:play()
+			end
+		end
+		
+		-- Check Player Collision Power
+		for i=#timePowers, 1, -1 do
+			local timePower = timePowers[i]
+			if playerCollision(player.x, player.y, player.w, player.h, timePower.x, timePower.y, timePower.w, timePower.h) then
+				table.remove(timePowers, i)
+				timeToPlay = timeToPlay + 2
+			end
+		end
+		
+		-- Show Random Dollars
+		if math.random() < 0.01 then
+			local dolar = {}
+			dolar.w = 96
+			dolar.h = 36
+			dolar.x = math.random(0, 950 - dolar.w)
+			dolar.y = math.random(0, 600 - dolar.h)
+			table.insert(dolars, dolar)
+		end
+		
+		-- Show Random Power
+		if math.random() < 0.01 and timeToPlay < 8 then
+			local timePower = {}
+			timePower.w = 96
+			timePower.h = 36
+			timePower.x = math.random(0, 950 - timePower.w)
+			timePower.y = math.random(0, 600 - timePower.h)
+			table.insert(timePowers, timePower)
+		end
+		
+		-- Discount Time
+		timeToPlay = timeToPlay-dt
 	end
+	
+	if timeToPlay <= 0 and love.keyboard.isDown("space") then
+		timeToPlay = 10
+		score = 0
+	end
+	
+	--if timeToPlay <= 0 and love.keyboard.isDown("b") then
+	--	backMenu
+	--end
 end
 
 function love.draw()
@@ -129,13 +159,19 @@ function love.draw()
 		love.graphics.draw(images.dolar, dolar.x, dolar.y)
 	end
 	
+	-- Draw PowerTime
+	for i = 1, #timePowers, 1 do
+		local timePower = timePowers[i]
+		love.graphics.draw(images.timePower, timePower.x, timePower.y)
+	end
+	
 	if timeToPlay > 0 then
 		-- Draw Text Score
 		love.graphics.setFont(fonts.large)
 		love.graphics.print("Score: " .. score, 10, 10)
 	end
 	-- Draw Timer
-	if timeToPlay>0 then
+	if timeToPlay > 0 then
 		love.graphics.print(math.ceil(timeToPlay), 970, 10)
 	else
 		love.graphics.print(0, 970, 10)
@@ -143,5 +179,7 @@ function love.draw()
 	
 	if timeToPlay <= 0 then
 		love.graphics.print("Your Score: " .. score, 400, 325)
+		love.graphics.print("Press Space to Replay", 335, 385)
+		love.graphics.print("Press 'b' to BackMenu", 335, 425)
 	end
 end
