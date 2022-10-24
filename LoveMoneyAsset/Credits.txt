@@ -18,9 +18,9 @@ Link: https://opengameart.org/content/steps-in-wood-floor
 
 Menu 
 {
-Name: SpongeBob Production Music What Shall We Do With the Drunken Sailor?
+Name: SpongeBob Production Music What Shall We Do With the Drunken Sailor? .wav
 Author: SpongeBob Production Music
-Link: https://opengameart.org/content/music-loop-variations
+Link: https://www.youtube.com/watch?v=1EFfK3vhwdA
 }
 
 GamePlay
@@ -30,3 +30,20 @@ Author: MSTR
 Link: https://opengameart.org/content/cheerful-1-choro-bavario-happy-loop
 }
 
+-----Art:
+
+Crab - Dollar - Floor - Pincer: Jose Altamirano
+
+Scroll
+{
+Name: kindpng_5697892.png 
+Author: Izon Film
+Link: https://www.kindpng.com/imgv/TiRwRmo_pixel-art-paper-scroll-transparent-hd-png-download/
+}
+
+Frame
+{
+Name: wooden frame
+CREATOR ID: 9664c4
+Link: http://pixelartmaker.com/art/4141571b68d5658
+}

@@ -129,14 +129,19 @@ function love.draw()
 		love.graphics.draw(images.dolar, dolar.x, dolar.y)
 	end
 	
-	-- Draw Text Score
-	love.graphics.setFont(fonts.large)
-	love.graphics.print("Puntaje: " .. score, 10, 10)
-	
+	if timeToPlay > 0 then
+		-- Draw Text Score
+		love.graphics.setFont(fonts.large)
+		love.graphics.print("Score: " .. score, 10, 10)
+	end
 	-- Draw Timer
 	if timeToPlay>0 then
 		love.graphics.print(math.ceil(timeToPlay), 970, 10)
 	else
 		love.graphics.print(0, 970, 10)
+	end
+	
+	if timeToPlay <= 0 then
+		love.graphics.print("Your Score: " .. score, 400, 325)
 	end
 end
