@@ -40,10 +40,3 @@ Name: kindpng_5697892.png
 Author: Izon Film
 Link: https://www.kindpng.com/imgv/TiRwRmo_pixel-art-paper-scroll-transparent-hd-png-download/
 }
-
-Frame
-{
-Name: wooden frame
-CREATOR ID: 9664c4
-Link: http://pixelartmaker.com/art/4141571b68d5658
-}
